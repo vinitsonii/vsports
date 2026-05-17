@@ -563,14 +563,71 @@
             <input type="text" id="customer-name" placeholder="Full Name" required>
             <input type="text" id="customer-address" placeholder="Shipping Address" required>
             <input type="tel" id="customer-phone" placeholder="Contact Number (10 digits)" required>
-            <input type="text" id="payment" value="Cash on delivery." readonly>
-            <button class="place-order-btn" onclick="validateCheckout()">Place Order</button>
+            <!-- <input type="text" id="payment" value="Cash on delivery." readonly> -->
+            <button class="place-order-btn" onclick="payNow()">Pay Now</button>
         </div>
         <br><br>
     </div>
     <script>
 
+function payNow() {
 
+    let name = document.getElementById("customer-name").value.trim();
+    let address = document.getElementById("customer-address").value.trim();
+    let phone = document.getElementById("customer-phone").value.trim();
+
+    let checkoutMessage = document.getElementById("checkout-message");
+
+    if (name === "" || address === "" || phone === "") {
+        checkoutMessage.textContent = "❌ Please fill all fields!";
+        checkoutMessage.className = "error";
+        checkoutMessage.classList.remove("hidden");
+        return;
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+        checkoutMessage.textContent = "❌ Enter valid 10 digit number!";
+        checkoutMessage.className = "error";
+        checkoutMessage.classList.remove("hidden");
+        return;
+    }
+
+    let totalText = document.querySelector(".cart-total").innerText;
+    let totalAmount = parseInt(totalText.replace(/[^\d]/g, ""));
+
+    let options = {
+        "key": "rzp_test_Sq7x7OL1DUIl17",
+        "amount": totalAmount * 100,
+        "currency": "INR",
+        "name": "Sports Store",
+        "description": "Sports Product Purchase",
+        "image": "Images/logo.png",
+
+        "handler": function (response) {
+
+            alert(
+                "✅ Payment Successful!\n\n" +
+                "Payment ID: " + response.razorpay_payment_id
+            );
+
+            localStorage.removeItem("cart");
+
+            window.location.href = "Products.html";
+        },
+
+        "prefill": {
+            "name": name,
+            "contact": phone
+        },
+
+        "theme": {
+            "color": "#2563eb"
+        }
+    };
+
+    let rzp1 = new Razorpay(options);
+    rzp1.open();
+}
         function validateCheckout() {
             let name = document.getElementById("customer-name").value.trim();
             let address = document.getElementById("customer-address").value.trim();
@@ -742,5 +799,6 @@
             <p>&copy; 2025 Sports Store. All rights reserved.</p>
         </div>
     </footer>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 </html>
