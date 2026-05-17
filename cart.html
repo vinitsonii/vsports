@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Improved Navbar */
+        .navbar {
+            background: linear-gradient(90deg, #0052a4, #0080ff);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .navbar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+
+        .footer {
+            background: #1A252F;
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: auto;
+            padding: 0 20px;
+            text-align: left;
+        }
+
+        .footer-column {
+            padding: 10px;
+        }
+
+        .footer-column h3 {
+            font-size: 22px;
+            color: #5DADE2;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #5DADE2;
+            padding-bottom: 5px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-column ul li {
+            margin: 8px 0;
+        }
+
+        .footer-column ul li a {
+            color: #dcdcdc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #5DADE2;
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .social-icons a img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .social-icons a img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Newsletter Form */
+        .newsletter-form {
+            margin-top: 15px;
+        }
+
+        .newsletter-form input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .newsletter-form button {
+            background: #5DADE2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background: #3498DB;
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            background: #0F1724;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+
+        .checkout-form {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .checkout-form h2 {
+            font-size: 24px;
+            color: #0059B3;
+            margin-bottom: 15px;
+        }
+
+        .checkout-form input {
+            width: 90%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .checkout-form input:focus {
+            border-color: #007FFF;
+            box-shadow: 0px 0px 5px rgba(0, 127, 255, 0.5);
+        }
+
+        .place-order-btn {
+            background: linear-gradient(90deg, #0059B3, #007FFF);
+            color: white;
+            font-size: 18px;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .place-order-btn:hover {
+            background: #004080;
+        }
+
+        @media (max-width: 480px) {
+            .checkout-form {
+                max-width: 90%;
+                padding: 15px;
+            }
+        }
+
+
+
+        .checkout-form {
+            max-width: 500px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+            padding-left: 35px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .place-order-btn {
+            background: #007FFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 95%
+        }
+
+        .place-order-btn:hover {
+            background: #0059B3;
+        }
+
+        #checkout-message {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            padding: 10px;
+            width: 90%;
+            border-radius: 5px;
+        }
+
+        .success {
+            color: green;
+            background: #e6f9e6;
+            border: 1px solid green;
+        }
+
+        .error {
+            color: red;
+            background: #fde2e2;
+            border: 1px solid red;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .cart-container {
+            max-width: 950px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .cart-container:hover {
+            transform: scale(1.01);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 18px 5px;
+            transition: background 0.3s ease;
+        }
+
+        .cart-item:hover {
+            background: #f9f9f9;
+        }
+
+        .cart-item img {
+            padding: 10px;
+            width: 120px;
+            height: 100px;
+            border-radius: 8px;
+            margin-right: 20px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .cart-item-details {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 5px 0;
+            color: #222;
+        }
+
+        .cart-item p {
+            color: #666;
+            font-size: 15px;
+            margin: 4px 0;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            margin-left: -12px;
+        }
+
+        .quantity button {
+            background: #007FFF;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .quantity button:hover {
+            background: #0059B3;
+        }
+
+        .quantity input {
+            width: 45px;
+            text-align: center;
+            margin: 0 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 6px;
+            font-weight: 600;
+        }
+
+        .cart-total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            color: #222;
+            margin-top: 25px;
+            padding: 10px;
+            border-top: 2px solid #ddd;
+        }
+
+        .btn {
+            background: #007FFF;
+            color: white;
+            padding: 12px 22px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background: #0059B3;
+            transform: scale(1.05);
+        }
+
+        .btn-remove {
+            background: #ff7373;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background 0.3s ease-in-out, transform 0.2s ease;
+        }
+
+        .btn-remove:hover {
+            background: #D93636;
+            transform: scale(1.05);
+        }
+
+        .btn-remove:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: #555;
+        }
+
+        .btn-secondary:hover {
+            background: #333;
+        }
+
+        .empty-cart {
+            text-align: center;
+            margin-top: 50px;
+            display: none;
+        }
+
+        .empty-cart img {
+            width: 220px;
+        }
+
+        .empty-cart p {
+            font-size: 18px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+
+        .back-link {
+            text-decoration: none;
+            color: #007BFF;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bolder;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h1>Sports Store</h1>
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <div class="nav-links" id="navLinks">
+            <a href="Index.html">Home</a>
+            <a href="Products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="aboutus.html">About Us</a>
+            <a href="ContactUs.html">Contact</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Your Shopping Cart 🛒</h1>
+        <hr width="100%" color="royalblue" size="3"><br><br><br>
+        <div id="cart-items"></div>
+        <p class="cart-total">Total: ₹0.00</p>
+
+        <div class="empty-cart" style="display: none;">
+            <img src="Images/empty1.png" alt="Empty Cart">
+            <p>Your cart is empty! 🛍️</p>
+        </div>
+        <a href="Products.html" class="back-link">⬅ Continue Shopping</a>
+        <br><br><br>
+        <div class="cc" style="display: block;"> <button class="btn clear-cart">Clear Cart</button></div>
+        <br><br>
+        <hr width="100%" color="royalblue" size="3">
+
+        <br><br>
+        <div class="checkout-form">
+            <h2>Enter Your Details</h2>
+            <p id="checkout-message" class="hidden"></p>
+            <input type="text" id="customer-name" placeholder="Full Name" required>
+            <input type="text" id="customer-address" placeholder="Shipping Address" required>
+            <input type="tel" id="customer-phone" placeholder="Contact Number (10 digits)" required>
+            <input type="text" id="payment" value="Cash on delivery." readonly>
+            <button class="place-order-btn" onclick="validateCheckout()">Place Order</button>
+        </div>
+        <br><br>
+    </div>
+    <script>
+
+
+        function validateCheckout() {
+            let name = document.getElementById("customer-name").value.trim();
+            let address = document.getElementById("customer-address").value.trim();
+            let phone = document.getElementById("customer-phone").value.trim();
+            let checkoutMessage = document.getElementById("checkout-message");
+
+            if (name === "" || address === "" || phone === "") {
+                checkoutMessage.textContent = "❌ Please fill all fields! ⚠️";
+                checkoutMessage.className = "error";
+            } else if (!/^\d{10}$/.test(phone)) {
+                checkoutMessage.textContent = "❌ Enter a valid 10-digit phone number! ⚠️";
+                checkoutMessage.className = "error";
+            } else {
+                checkoutMessage.textContent = "✅ Order Placed Successfully!";
+                checkoutMessage.className = "success";
+
+                alert(`✅ Order placed successfully!\n\n📌 Name: ${name}\n📍 Address: ${address}\n📞 Contact: ${phone}\n💳 Payment Type: Cash on delivery.\n\n\n Thank you for shopping with us. Your order will be delivered soon.`);
+                localStorage.removeItem("cart");
+                window.location.href = "Products.html";
+
+                document.getElementById("customer-name").value = "";
+                document.getElementById("customer-address").value = "";
+                document.getElementById("customer-phone").value = "";
+            }
+            checkoutMessage.classList.remove("hidden");
+        }
+
+
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let cartContainer = document.getElementById("cart-items");
+            let totalElement = document.querySelector(".cart-total");
+            let emptyCartMessage = document.querySelector(".empty-cart");
+            let chkfrm = document.querySelector(".checkout-form");
+            let cc = document.querySelector(".cc");
+
+            cartContainer.innerHTML = "";
+            let totalAmount = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = "block";
+                totalElement.style.display = "none";
+                chkfrm.style.display = "none";
+                cc.style.display = "none";
+
+                return;
+            } else {
+                emptyCartMessage.style.display = "none";
+                totalElement.style.display = "block";
+            }
+
+            cart.forEach(item => {
+                let totalItemPrice = item.price * item.quantity;
+                totalAmount += totalItemPrice;
+
+                let cartItem = `
+                <div class="cart-item">
+                    <div class="cart-item-details">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h3>${item.name}</h3>
+                            <p>Price: ₹${item.price}</p>
+                            <p>Total: ₹${totalItemPrice}</p>
+                        </div>
+                    </div>
+                    <div class="quantity">
+                        <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <input type="text" value="${item.quantity}" readonly>
+                        <button onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <button class="btn-remove" onclick="removeItem(${item.id})">❌ Remove</button>
+                </div>
+            `;
+                cartContainer.innerHTML += cartItem;
+            });
+
+            totalElement.innerHTML = `Total: ₹${totalAmount}`;
+        }
+
+        function updateQuantity(id, change) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let itemIndex = cart.findIndex(item => item.id == id);
+
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity += change;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        }
+
+        function removeItem(id) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart = cart.filter(item => item.id != id);
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        }
+
+        document.querySelector(".clear-cart").addEventListener("click", function () {
+            localStorage.removeItem("cart");
+            loadCart();
+        });
+
+        loadCart();
+    </script>
+
+    </script>
+
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Deals</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Return Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Customer Support</h3>
+                <ul>
+                    <li><a href="#">Track Your Order</a></li>
+                    <li><a href="#">Shipping Information</a></li>
+                    <li><a href="#">Payment Methods</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">Affiliate Program</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <p><strong>Address:</strong> 101 Sports St, Anand </p>
+                <p><strong>Phone:</strong> +91 93456 23456</p>
+                <p><strong>Email:</strong> info@sportsstore.com</p>
+                <p><strong>Working Hours:</strong> 9 AM - 8 PM</p>
+            </div>
+
+            <div class="footer-column">
+                <h3>Follow Us</h3>
+                <p>Stay updated with our latest offers and news.</p>
+                <div class="social-icons">
+                    <a href="#"><img src="Images/fb1.png" alt="Facebook"></a>
+                    <a href="#"><img src="Images/twitter1.png" alt="Twitter"></a>
+                    <a href="#"><img src="Images/ig2.png" alt="Instagram"></a>
+                    <a href="#"><img src="Images/yt1.png" alt="YouTube"></a>
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <h3>Subscribe to Our Newsletter</h3>
+                <p>Get exclusive discounts and updates straight to your inbox.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Sports Store. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
